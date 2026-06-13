@@ -1,229 +1,359 @@
-/* ============================================
-   GLOBAL - dark Among Us theme
-============================================ */
+/* ============================================================================
+   👾 GLOBAL ARCADE SYSTEM CONFIGURATIONS
+   ============================================================================ */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #0a0a14;
-  color: #fff;
+  background: #04040a;
+  color: #ffffff;
+  font-family: 'VT323', monospace;
+  font-size: 24px;
   min-height: 100vh;
+  overflow-x: hidden;
+  padding-bottom: 60px;
 }
 
-/* ============================================
-   HEADER
-============================================ */
-.header {
-  text-align: center;
-  padding: 50px 20px 24px;
-  background: linear-gradient(180deg, #1a0a0a 0%, #0a0a14 100%);
-}
-.header h1 {
-  font-size: 3rem;
-  color: #ff4757;
-  text-shadow: 0 0 40px rgba(255,71,87,0.5);
-  margin-bottom: 10px;
-}
-.header .subtitle {
-  color: #666;
-  font-size: 1rem;
-  margin-bottom: 20px;
-}
-.sponsor-row {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.sponsor-pill {
-  background: #12121f;
-  border: 1px solid #222;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  color: #888;
+/* AUTHENTIC FLAT SCANLINE MATRIX */
+.crt-overlay {
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%), 
+              linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
+  z-index: 9999;
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
 }
 
-/* ============================================
-   INPUT CONTAINER
-============================================ */
-.input-wrap {
-  max-width: 600px;
-  margin: 0 auto 40px;
-  padding: 0 20px;
-}
-.input-wrap input {
-  width: 100%;
-  padding: 16px;
-  background: #12121f;
-  border: 2px solid #222;
-  border-radius: 12px;
-  color: #fff;
-  font-size: 1rem;
-  margin-bottom: 12px;
-  transition: border-color 0.3s;
-}
-.input-wrap input:focus {
-  outline: none;
-  border-color: #ff4757;
-}
-.btn-investigate {
-  width: 100%;
-  padding: 16px;
-  background: #ff4757;
-  color: #fff;
-  font-size: 1.1rem;
-  font-weight: 700;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.btn-investigate:hover { background: #ff6b81; }
-.btn-investigate:disabled { background: #444; cursor: not-allowed; }
-
-/* ============================================
-   STATUS TRACKER
-============================================ */
-.status-box {
-  text-align: center;
-  font-family: monospace;
-  color: #ff4757;
-  font-size: 1.1rem;
-  margin-bottom: 30px;
-  min-height: 24px;
-}
-
-/* ============================================
-   RESULTS SCREEN INTERACTION
-============================================ */
-.summary-box {
-  max-width: 1000px;
-  margin: 0 auto 30px;
-  background: #12121f;
-  border: 1px solid #222;
-  padding: 24px;
-  border-radius: 16px;
-}
-.summary-box h2 { color: #ff4757; margin-bottom: 8px; }
-.alert-impostor { color: #ff4757; font-weight: bold; font-size: 1.1rem; margin-top: 8px; }
-.alert-clear { color: #2ed573; font-weight: bold; font-size: 1.1rem; margin-top: 8px; }
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-  max-width: 1000px;
+.game-wrapper {
+  max-width: 1050px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-/* ============================================
-   CREWMATE EVIDENCE CARDS
-============================================ */
+/* ============================================================================
+   🎬 CHIP-TUNED HEADER & BOUNCING CREWMATES
+   ============================================================================ */
+.header-arcade {
+  text-align: center;
+  padding: 40px 10px 24px;
+}
+
+.header-arcade h1 {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 2.8rem;
+  color: #ff4757;
+  line-height: 1.2;
+  text-shadow: 4px 4px 0px #4a0e17, 0 0 30px rgba(255, 71, 87, 0.6);
+  margin: 20px 0;
+}
+
+.subtitle-game {
+  font-size: 1.1rem;
+  color: #00ffff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* ANIMATED TIMED VERTICAL BOUNCERS */
+.avatar-row {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  font-size: 2.2rem;
+}
+
+.bouncing-avatar {
+  display: inline-block;
+  animation: crewmateBounce 0.6s infinite alternate ease-in-out;
+}
+.avatar-blue   { animation-delay: 0.0s; }
+.avatar-red    { animation-delay: 0.15s; }
+.avatar-green  { animation-delay: 0.3s; }
+.avatar-yellow { animation-delay: 0.45s; }
+
+@keyframes crewmateBounce {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-20px) scale(1.05); }
+}
+
+/* SPONSORS TICKER MARQUEE */
+.sponsor-marquee {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+.sponsor-marquee .pill {
+  background: #101026;
+  border: 2px solid #2d2d54;
+  padding: 4px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #a4b0be;
+}
+
+/* ============================================================================
+   📖 ARCADE MANUAL STATION
+   ============================================================================ */
+.instructions-card {
+  background: #0d0d1a;
+  border: 3px dashed #00ffff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+}
+.panel-header {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.9rem;
+  color: #eccc68;
+  margin-bottom: 14px;
+}
+.instructions-list {
+  padding-left: 24px;
+  line-height: 1.5;
+  color: #ced6e0;
+}
+.instructions-list li {
+  margin-bottom: 6px;
+}
+
+/* ============================================================================
+   🎛️ CONTROL INTERFACE TERMINAL
+   ============================================================================ */
+.console-box {
+  background: #000000;
+  border: 4px solid #ff4757;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 40px;
+  box-shadow: 0 0 25px rgba(255, 71, 87, 0.2);
+}
+.input-line {
+  display: flex;
+  align-items: center;
+  background: #0c0c12;
+  border: 2px solid #2d2d54;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+.prompt-arrow {
+  font-family: 'Press Start 2P', cursive;
+  color: #ff4757;
+  margin-right: 14px;
+  font-size: 1.2rem;
+}
+.input-line input {
+  background: transparent;
+  border: none;
+  width: 100%;
+  font-family: 'VT323', monospace;
+  font-size: 1.5rem;
+  color: #00ffff;
+}
+.input-line input:focus { outline: none; }
+
+.btn-arcade-start {
+  width: 100%;
+  padding: 16px;
+  background: #ff4757;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1.1rem;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 6px 0px #a71d2a;
+  transition: all 0.1s;
+}
+.btn-arcade-start:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0px #a71d2a;
+}
+.btn-arcade-start:disabled {
+  background: #4b4b60;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: translateY(4px);
+}
+
+/* ============================================================================
+   🚨 THE THEATER ENGINE: FULL ALARM EMERGENCY FLASH OVERLAY
+   ============================================================================ */
+.emergency-layer {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #000000;
+  z-index: 999;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.emergency-banner {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 3rem;
+  color: #ffffff;
+  padding: 20px 50px;
+  background: #ff4757;
+  text-shadow: 4px 4px 0px #000;
+  letter-spacing: 4px;
+  transform: skewX(-10deg);
+}
+.emergency-sub {
+  font-family: monospace;
+  font-size: 1.3rem;
+  color: #ff4757;
+  margin-top: 30px;
+  letter-spacing: 2px;
+}
+.siren-active {
+  display: flex !important;
+  animation: redFlash 0.4s infinite alternate;
+}
+@keyframes redFlash {
+  0% { background: #000000; }
+  100% { background: #3a0007; }
+}
+
+/* ============================================================================
+   📋 RESULTS SCREEN & CARD MATRIX
+   ============================================================================ */
+.summary-box {
+  background: #0d0d1a;
+  border: 3px solid #2d2d54;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.summary-box h2 {
+  font-size: 1.4rem;
+  color: #ff4757;
+  margin-bottom: 12px;
+}
+.alert-impostor { color: #ff4757; font-weight: bold; font-family: 'Press Start 2P'; font-size: 0.8rem; margin-top: 10px; }
+.alert-clear { color: #2ed573; font-weight: bold; font-family: 'Press Start 2P'; font-size: 0.8rem; margin-top: 10px; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+/* EVIDENCE CARD SHELLS */
 .card {
-  background: #12121f;
-  border: 2px solid #222;
-  border-radius: 16px;
+  background: #0d0d1a;
+  border: 3px solid #2d2d54;
+  border-radius: 12px;
   padding: 24px;
   position: relative;
-  overflow: hidden; /* Keeps stamp clipped beautifully inside layout */
-  transition: transform 0.3s;
+  overflow: hidden;
 }
-.card:hover { transform: translateY(-4px); }
-.card.impostor { border-color: rgba(255,71,87,0.3); box-shadow: 0 0 20px rgba(255,71,87,0.1); }
-.card.innocent { border-color: rgba(46,213,115,0.3); box-shadow: 0 0 20px rgba(46,213,115,0.1); }
+.card.impostor { border-color: #ff4757; box-shadow: 0 0 20px rgba(255, 71, 87, 0.15); }
+.card.innocent { border-color: #2ed573; box-shadow: 0 0 20px rgba(46, 213, 115, 0.15); }
+.card.ghost    { border-color: #ffa502; box-shadow: 0 0 20px rgba(255, 165, 2, 0.15); }
 
-.card-name { font-size: 1.3rem; font-weight: 700; margin-bottom: 12px; color: #fff; }
-.badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 16px; }
-.badge.IMPOSTOR { background: rgba(255,71,87,0.2); color: #ff4757; }
-.badge.INNOCENT { background: rgba(46,213,115,0.2); color: #2ed573; }
+.card-name { font-family: 'Press Start 2P', cursive; font-size: 1rem; margin-bottom: 10px; color: #ffffff; }
 
-/* Fixed Contrast Scoring Values */
+.badge {
+  display: inline-block;
+  font-family: 'Press Start 2P', cursive;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  margin-bottom: 14px;
+}
+.badge.IMPOSTOR { background: #ff4757; color: #fff; }
+.badge.INNOCENT { background: #2ed573; color: #000; }
+.badge.GHOST    { background: #ffa502; color: #000; }
+
 .score-big { 
-  font-size: 3.5rem; 
+  font-size: 4rem; 
   font-weight: 900; 
   line-height: 1; 
   margin-bottom: 2px;
   position: relative;
-  z-index: 2; /* Layer details over background items */
+  z-index: 2;
 }
-.score-sub { font-size: 0.8rem; color: #888 !important; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+.score-sub { font-size: 0.85rem; color: #747d8c; text-transform: uppercase; margin-bottom: 16px; }
 
-/* Progress Bar Components */
-.bar-track { background: #0a0a14; height: 8px; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
-.bar-fill { height: 100%; border-radius: 4px; width: 0; }
+/* THE PERFORMANCE HEALTH TRACKS */
+.bar-track { background: #000; height: 10px; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
+.bar-fill { height: 100%; width: 0; }
 .bar-fill.bar-red { background: #ff4757; }
 .bar-fill.bar-green { background: #2ed573; }
+.bar-fill.bar-orange { background: #ffa502; }
 
-/* Fixed Text Contrast Colors */
 .card-stats { 
-  font-size: 0.9rem; 
-  color: #ffffff !important; /* Forces clean visibility over red backdrops */
-  line-height: 1.6; 
+  font-size: 1.15rem; 
+  color: #ffffff; 
+  line-height: 1.5; 
   margin-bottom: 16px;
   position: relative;
   z-index: 2;
 }
-.card-stats b {
-  color: #ffffff !important;
-}
 
 .card-evidence { 
-  font-size: 0.9rem; 
-  color: #e0e0e0 !important; 
-  background: rgba(0,0,0,0.4) !important; 
-  padding: 10px; 
-  border-radius: 8px;
-  border-left: 3px solid #ff4757;
+  font-size: 1.1rem; 
+  color: #fff; 
+  background: rgba(0,0,0,0.6); 
+  padding: 12px; 
+  border-radius: 6px;
+  border-left: 4px solid #ff4757;
   position: relative;
   z-index: 2;
 }
 .card.innocent .card-evidence { border-left-color: #2ed573; }
+.card.ghost .card-evidence { border-left-color: #ffa502; }
 
-/* ============================================
-   🔥 REPAIRED CRITICAL IMPOSTOR STAMP 
-============================================ */
+/* ============================================================================
+   🔥 REPAIRED HIGHER-PRIORITY OVERLAY JUDGMENT STAMPS
+   ============================================================================ */
 .stamp {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 50%; left: 50%;
   transform: translate(-50%, -50%) rotate(-15deg) scale(3);
   border: 5px solid #ff4757;
   color: #ff4757;
-  background: rgba(18, 18, 31, 0.9); /* Opaque dark background to blank out items underneath */
-  font-size: 1.8rem;
-  font-weight: 900;
-  padding: 10px 24px;
-  border-radius: 8px;
-  letter-spacing: 4px;
+  background: rgba(13, 13, 26, 0.95);
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1.2rem;
+  padding: 10px 16px;
+  border-radius: 4px;
   pointer-events: none;
   opacity: 0;
-  z-index: 99 !important; /* Pushes the stamp all the way to the top */
+  z-index: 99 !important;
+}
+.stamp.ghost-stamp {
+  border-color: #ffa502;
+  color: #ffa502;
 }
 .stamp.go {
-  animation: stampIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  animation-delay: 0.2s;
+  animation: stampDrop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
-@keyframes stampIn {
+@keyframes stampDrop {
   to { transform: translate(-50%, -50%) rotate(-15deg) scale(1); opacity: 1; }
 }
 
-/* ============================================
-   DOWNLOAD BUTTON
-============================================ */
+/* DOWNLOAD BUTTON */
 .btn-download {
   display: block;
   margin: 32px auto 0;
-  max-width: 340px;
-  padding: 16px 32px;
+  width: 100%;
+  max-width: 400px;
+  padding: 16px;
   background: #2ed573;
   color: #000;
-  font-size: 1rem;
-  font-weight: 800;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.9rem;
   border: none;
-  border-radius: 12px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s;
+  box-shadow: 0 6px 0px #1e874b;
 }
-.btn-download:hover { transform: scale(1.02); background: #26af5f; }
+.btn-download:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0px #1e874b;
+}

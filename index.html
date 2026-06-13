@@ -2,61 +2,66 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>🔍 Freeloader Detective</title>
+  <title>👾 FREELOADER DETECTIVE: ARCADE MODE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="input-wrap">
-    <input
-      type="text"
-      id="repoUrl"
-      placeholder="Paste GitHub repo URL — e.g. https://github.com/team/project"
-      style="margin-bottom: 10px;"
-    />
-    <input
-      type="password"
-      id="githubToken"
-      placeholder="🔑 Optional: Paste your GitHub Token for 100% accurate line stats"
-      style="margin-bottom: 15px; width: 100%; padding: 12px; background: #12121f; border: 1px solid #333; color: white; border-radius: 8px;"
-    />
-    <button class="btn-investigate" id="analyzeBtn" onclick="analyze()">
-      🔍 Investigate for Freeloaders
-    </button>
+
+  <div class="crt-overlay"></div>
+
+  <div id="emergencyScreen" class="emergency-layer">
+    <div class="emergency-banner">EMERGENCY MEETING</div>
+    <div class="emergency-sub" id="emergencyStatus">BOOTING FORENSIC ALGORITHMS...</div>
   </div>
 
-  <div class="header">
-    <div class="crewmates">
-      <span class="crewmate">🔵</span>
-      <span class="crewmate">🔴</span>
-      <span class="crewmate">🟢</span>
-      <span class="crewmate">🟡</span>
+  <div class="game-wrapper">
+    
+    <div class="header-arcade">
+      <div class="avatar-row">
+        <span class="bouncing-avatar avatar-blue">🔵</span>
+        <span class="bouncing-avatar avatar-red">🔴</span>
+        <span class="bouncing-avatar avatar-green">🟢</span>
+        <span class="bouncing-avatar avatar-yellow">🟡</span>
+      </div>
+      <h1>FREELOADER<br>DETECTIVE</h1>
+      <p class="subtitle-game">HYPER-CHARGED AI GIT AUDIT ENGINE • VERSION 4.0</p>
+      
+      <div class="sponsor-marquee">
+        <span class="pill">⚡ DAYTONA SANDBOX</span>
+        <span class="pill">🌐 BRIGHT DATA</span>
+        <span class="pill">🔀 TOKENROUTER</span>
+        <span class="pill">🤖 KIMI AI</span>
+        <span class="pill">🦝 OFFICE RACCOON</span>
+        <span class="pill">✨ SENSENOVA</span>
+      </div>
     </div>
-    <h1>🔍 Freeloader Detective</h1>
-    <p class="subtitle">Among Us-style AI audit for group project freeloaders</p>
-    <div class="sponsor-row">
-      <span class="sponsor-pill">⚡ Daytona Sandbox</span>
-      <span class="sponsor-pill">🌐 Bright Data</span>
-      <span class="sponsor-pill">🔀 TokenRouter</span>
-      <span class="sponsor-pill">🤖 Kimi AI Core</span>
+
+    <div class="instructions-card">
+      <div class="panel-header">🚨 SYSTEM HOW TO PLAY MANUAL</div>
+      <ol class="instructions-list">
+        <li>Drop a shared team project link into the repository scan terminal grid.</li>
+        <li>Hit the main launch button to cycle secure sandboxes through Daytona frameworks.</li>
+        <li>Expose dead bodies, hidden copypaste slackers, and panic metrics automatically!</li>
+      </ol>
     </div>
+
+    <div class="console-box">
+      <div class="input-line">
+        <span class="prompt-arrow">&gt;</span>
+        <input type="text" id="repoUrl" placeholder="PASTE TEAM REPOSITORY TARGET LINK HERE..." />
+      </div>
+      <button class="btn-arcade-start" id="analyzeBtn" onclick="triggerEmergencySequence()">
+        [ PRESS START TO INVESTIGATE ]
+      </button>
+    </div>
+
+    <div id="results"></div>
+
   </div>
-
-  <div class="input-wrap">
-    <input
-      type="text"
-      id="repoUrl"
-      placeholder="Paste GitHub repo URL — e.g. https://github.com/team/project"
-    />
-    <button class="btn-investigate" id="analyzeBtn" onclick="analyze()">
-      🔍 Investigate for Freeloaders
-    </button>
-  </div>
-
-  <div class="status" id="status"></div>
-
-  <div class="results" id="results"></div>
 
   <script src="dashboard.js"></script>
-
 </body>
 </html>

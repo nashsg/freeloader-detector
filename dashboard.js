@@ -1,148 +1,186 @@
-// Steps shown in status bar while AI is working
 const STEPS = [
-  '🔐 Daytona: spinning up secure sandbox...',
-  '📂 Daytona: cloning repo, reading commit history...',
-  '🌐 Bright Data: scraping GitHub contributor page...',
-  '🔀 TokenRouter: routing to best AI model...',
-  '🕵️ Kimi AI: analysing contribution patterns...',
-  '⚖️ Kimi AI: calculating Suspicion Scores...',
-  '📄 Packaging Evidence Dossier...',
-  '🚨 Preparing impostor reveal...'
+  '🔐 DAYTONA: Spinning up isolated pipeline sandboxes...',
+  '📂 DAYTONA: Scanning branch history logs...',
+  '🌐 BRIGHT DATA: Crawling community contribution parameters...',
+  '🔀 TOKENROUTER: Connecting to highest available model gateway...',
+  '🕵️ KIMI AI: Tracking repository file modifications...',
+  '⚖️ KIMI AI: Scoring work anomalies...',
+  '📄 COMPILING EVIDENCE DOSSIER CONSOLE...',
+  '🚨 PREPARING FORENSIC STAMP LOGS...'
 ];
 
 let globalReportData = null;
 
-// ============================================
-// ANALYZE FUNCTION
-// Runs when user clicks Investigate button
-// ============================================
-async function analyze() {
+// ============================================================================
+// 🚨 EMERGENCY INTRO MEETING CONTROLLER
+// ============================================================================
+function triggerEmergencySequence() {
   const repoUrl = document.getElementById('repoUrl').value.trim();
-  const githubToken = document.getElementById('githubToken') ? document.getElementById('githubToken').value.trim() : '';
-  
   if (!repoUrl) {
-    alert('Please paste a GitHub repo URL first!');
+    alert('ENTER A TARGET REPOSITORY URL FIRST!');
     return;
   }
 
   const btn = document.getElementById('analyzeBtn');
-  const status = document.getElementById('status');
-  const results = document.getElementById('results');
+  const emergencyScreen = document.getElementById('emergencyScreen');
+  const statusLabel = document.getElementById('emergencyStatus');
 
-  // Reset UI
+  // Lock trigger down
   btn.disabled = true;
-  results.innerHTML = '';
-
-  // Start cycling through status steps
-  let stepIndex = 0;
-  status.textContent = STEPS[0];
   
-  const ticker = setInterval(() => {
-    if (stepIndex < STEPS.length - 1) {
-      stepIndex++;
-      status.textContent = STEPS[stepIndex];
+  // 🎵 PLAY HIGH-IMPACT ARCADE SIREN ALARM TRACK
+  try {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    let osc = audioContext.createOscillator();
+    let gain = audioContext.createGain();
+    
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(440, audioContext.currentTime);
+    // Oscillate pitch up and down like a real siren alarm loop!
+    osc.frequency.linearRampToValueAtTime(880, audioContext.currentTime + 0.3);
+    osc.frequency.linearRampToValueAtTime(440, audioContext.currentTime + 0.6);
+    osc.frequency.linearRampToValueAtTime(880, audioContext.currentTime + 0.9);
+    
+    gain.gain.setValueAtTime(0.15, audioContext.currentTime);
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
+    
+    osc.start();
+    osc.stop(audioContext.currentTime + 1.2);
+  } catch(e) {
+    console.log('Audio contextual channel skipped.');
+  }
+
+  // Turn on screen flashes
+  emergencyScreen.classList.add('siren-active');
+
+  // Cycle states through the overlay text viewbox
+  let stepIdx = 0;
+  statusLabel.textContent = STEPS[0];
+
+  const loop = setInterval(() => {
+    stepIdx++;
+    if (stepIdx < STEPS.length) {
+      statusLabel.textContent = STEPS[stepIdx];
+    } else {
+      clearInterval(loop);
+      // Sequence completed, dump to dashboard render
+      emergencyScreen.classList.remove('siren-active');
+      executeAnalysisTransaction(repoUrl, btn);
     }
-  }, 400);
+  }, 450);
+}
+
+// ============================================================================
+// 📡 FETCH ACTION CALL
+// ============================================================================
+async function executeAnalysisTransaction(repoUrl, btn) {
+  const results = document.getElementById('results');
+  results.innerHTML = '';
 
   try {
     const response = await fetch('/api/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        repoUrl: repoUrl,
-        userToken: githubToken
-      })
+      body: JSON.stringify({ repoUrl })
     });
 
-    clearInterval(ticker);
     btn.disabled = false;
+    if (!response.ok) throw new Error('System pipeline crashed.');
 
-    if (!response.ok) throw new Error('Transaction execution exception');
-    
     const data = await response.json();
-    status.textContent = '🚨 Investigation finalized! Real target logs loaded below:';
-    
     globalReportData = data;
-    renderResults(data);
+    renderArcadeResults(data);
 
   } catch (error) {
-    clearInterval(ticker);
     btn.disabled = false;
-    status.textContent = '❌ An error occurred connecting to live backend engines.';
+    document.getElementById('results').innerHTML = `<div class="summary-box"><h2>❌ SYSTEM FAULT DETECTED CORES OFFLINE</h2></div>`;
     console.error(error);
   }
 }
 
-// ============================================
-// RENDER CARD RESULTS
-// Sorts by highest Suspicion Score so IMPOSTORS show up first!
-// ============================================
-function renderResults(data) {
-  const impostors = data.members.filter(m => m.verdict === 'IMPOSTOR');
+// ============================================================================
+// 🎨 ARCADE GRID RENDERER
+// ============================================================================
+function renderArcadeResults(data) {
+  const impostors = data.members.filter(m => m.verdict !== 'INNOCENT');
   
-  // Sort by highest suspicion score to ensure IMPOSTORS show up first!
-  const sorted = [...data.members].sort((a, b) => b.suspicionScore - a.suspicionScore);
-
   let html = `
     <div class="summary-box">
-      <h2>📋 Project Forensic Evaluation — ${data.projectName}</h2>
-      <p style="margin-bottom: 12px; color: #ccc;">${data.summary}</p>
+      <h2>📋 FORENSIC DOSSIER LOG — ${data.projectName}</h2>
+      <p style="color: #ced6e0;">${data.summary}</p>
       ${impostors.length > 0
-        ? `<p class="alert-impostor">🚨 ${impostors.length} IMPOSTORS DETECTED: ${impostors.map(m => `@${m.name}`).join(', ')}</p>`
-        : `<p class="alert-clear">✅ System Stable: Workloads are completely balanced.</p>`
+        ? `<p class="alert-impostor">🚨 WARNING: ${impostors.length} ANOMALOUS USERS EXPELLED TO THE WALL OF SHAME</p>`
+        : `<p class="alert-clear">✅ WORKSPACE SECURE: CLEAR CONTRIBUTION STABILITY TRACKED</p>`
       }
     </div>
     <div class="grid">
   `;
 
-  sorted.forEach(m => {
-    const cardClass = m.verdict === 'IMPOSTOR' ? 'impostor' : 'innocent';
-    const barClass = m.suspicionScore >= 70 ? 'bar-red' : 'bar-green';
-    const scoreColor = m.suspicionScore >= 70 ? '#ff4757' : '#2ed573';
+  data.members.forEach(m => {
+    let cardClass = 'innocent';
+    let barClass = 'bar-green';
+    let badgeLabel = 'CREWMATE';
+    let stampHtml = '';
+
+    if (m.verdict === 'IMPOSTOR') {
+      cardClass = 'impostor';
+      barClass = 'bar-red';
+      badgeLabel = 'SLOPPY IMPOSTOR';
+      stampHtml = '<div class="stamp go">IMPOSTOR</div>';
+    } else if (m.verdict === 'GHOST') {
+      cardClass = 'ghost';
+      barClass = 'bar-orange';
+      badgeLabel = 'DEAD BODY GHOST';
+      stampHtml = '<div class="stamp ghost-stamp go">DEAD BODY</div>';
+    }
 
     html += `
       <div class="card ${cardClass}">
         <div class="card-name">@${m.name}</div>
-        <span class="badge ${m.verdict}">${m.verdict}</span>
+        <span class="badge ${m.verdict}">${badgeLabel}</span>
         
-        <div class="score-big" style="color:${scoreColor};">
-          ${m.suspicionScore}<span style="font-size:1rem; color:#ffffff; font-weight:400">/100</span>
+        <div class="score-big" style="color: ${m.verdict === 'INNOCENT' ? '#2ed573' : (m.verdict === 'GHOST' ? '#ffa502' : '#ff4757')}">
+          ${m.suspicionScore}<span style="font-size:1.2rem; color:#fff;">/100</span>
         </div>
-        <div class="score-sub">Suspicion Score</div>
+        <div class="score-sub">SUSPICION LEVEL</div>
 
         <div class="bar-track">
           <div class="bar-fill ${barClass}" style="width:${m.suspicionScore}%"></div>
         </div>
 
         <div class="card-stats">
-          Commits: <b>${m.commits}</b> &nbsp;|&nbsp;
-          Lines added: <b>+${m.linesAdded}</b><br>
-          Lines deleted: <b>-${m.linesDeleted}</b> &nbsp;|&nbsp;
-          Last commit: <b>${m.lastCommitTime}</b>
+          🎮 COMMITS: <b>${m.commits}</b><br>
+          📈 ADDED: <b>+${m.linesAdded}</b><br>
+          📉 DELETED: <b>-${m.linesDeleted}</b><br>
+          ⏰ ACTIVE TIME: <b>${m.lastCommitTime}</b>
         </div>
 
-        <div class="card-evidence">🔍 ${m.evidence}</div>
-
-        ${m.verdict === 'IMPOSTOR' ? '<div class="stamp go">IMPOSTOR</div>' : ''}
+        <div class="card-evidence">🔍 AUDIT: ${m.evidence}</div>
+        ${stampHtml}
       </div>
     `;
   });
 
   html += `</div>
-    <button class="btn-download" onclick="downloadReport()">
-      📄 Download Evidence Dossier
+    <button class="btn-download" onclick="downloadForensicDossier()">
+      [ DOWNLOAD EVIDENCE DOSSIER ]
     </button>
   `;
 
   document.getElementById('results').innerHTML = html;
 }
 
-function downloadReport() {
+function downloadForensicDossier() {
   if (!globalReportData) return;
-  const outputText = `OFFICIAL VERDICT LOG: ${globalReportData.projectName}\nSummary: ${globalReportData.summary}`;
-  const blob = new Blob([outputText], { type: 'text/plain;charset=utf-8' });
-  const element = document.createElement('a');
-  element.href = URL.createObjectURL(blob);
-  element.download = `Evidence_Dossier.txt`;
-  element.click();
+  let text = `=====================================================\n  FREELOADER DETECTIVE ARCADE BLACK-BOX DOWNLOAD\n=====================================================\n`;
+  text += `Target: ${globalReportData.projectName}\nSummary: ${globalReportData.summary}\n\n`;
+  globalReportData.members.forEach(m => {
+    text += `[${m.verdict}] @${m.name} -> Suspicion: ${m.suspicionScore}/100 | Commits: ${m.commits} | Lines: +${m.linesAdded}/-${m.linesDeleted}\nEvidence: ${m.evidence}\n\n`;
+  });
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `Arcade_Report_${globalReportData.projectName}.txt`;
+  a.click();
 }
