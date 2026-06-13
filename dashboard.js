@@ -1,31 +1,21 @@
-// ============================================
-// DASHBOARD.JS
-// All frontend logic for Freeloader Detective
-// Handles: analyze button, status steps,
-// rendering cards, download report
-// ============================================
-
-// Steps shown in status bar while AI is working
-// Each step matches a real sponsor doing real work
 const STEPS = [
-  '🔐 Daytona: spinning up secure sandbox...',
-  '📂 Daytona: cloning repo, reading commit history...',
-  '🌐 Bright Data: scraping GitHub contributor page...',
-  '🔀 TokenRouter: routing to best AI model...',
-  '🕵️ Kimi AI: analysing contribution patterns...',
-  '⚖️ Kimi AI: calculating Suspicion Scores...',
-  '📄 Packaging Evidence Dossier...',
-  '🚨 Preparing impostor reveal...'
+  '🔐 [DAYTONA] Instantiating isolated secure Linux sandbox container...',
+  '📂 [DAYTONA] Cloning repository workspace and extracting git commit tree metadata...',
+  '🌐 [BRIGHT DATA] Initializing data-center proxy channels to cross-reference profiles...',
+  '🔀 [TOKENROUTER] Mapping system payload and optimizing latency channels...',
+  '🤖 [KIMI AI] Scanning structural contribution density and timeline consistency...',
+  '⚖️ [KIMI AI] Calculating vector Suspicion Scores and generating analytical text descriptions...',
+  '📄 [SENSENOVA U1] Directing deep expert skills pipeline to structure academic dossier forms...',
+  '🚨 Finalizing Among Us identity evaluation stamp matrix...'
 ];
 
-// ============================================
-// ANALYZE FUNCTION
-// Runs when user clicks Investigate button
-// ============================================
+// Global runtime placeholder to cache active calculations for SenseNova compilation tasks
+let currentGlobalAnalysisData = null;
+
 async function analyze() {
   const repoUrl = document.getElementById('repoUrl').value.trim();
   if (!repoUrl) {
-    alert('Please paste a GitHub repo URL first!');
+    alert('Please provide a valid repository URL first!');
     return;
   }
 
@@ -33,148 +23,123 @@ async function analyze() {
   const status = document.getElementById('status');
   const results = document.getElementById('results');
 
-  // Reset UI
   btn.disabled = true;
   results.innerHTML = '';
 
-  // Start cycling through status steps
   let i = 0;
   status.textContent = STEPS[0];
   const ticker = setInterval(() => {
     i++;
     if (i < STEPS.length) status.textContent = STEPS[i];
-  }, 800);
+  }, 750);
 
   try {
-    // Call the backend server
     const res = await fetch('/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ repoUrl })
     });
 
-    // Get response as text first so we can debug if needed
     const text = await res.text();
-    console.log('Raw server response:', text);
-
-    // Now parse as JSON
     const data = JSON.parse(text);
 
     clearInterval(ticker);
     btn.disabled = false;
 
-    if (!data.success) throw new Error(data.error || 'Server error');
+    if (!data.success) throw new Error(data.error || 'Pipeline transaction failed');
 
-    status.textContent = '✅ Investigation complete — verdict below!';
+    status.textContent = '🚨 Audit Finalized! Submitting suspect profiles for extradition below:';
+    currentGlobalAnalysisData = data.analysis; 
     renderResults(data.analysis);
 
   } catch (err) {
     clearInterval(ticker);
     btn.disabled = false;
-    status.textContent = '❌ ' + err.message;
-    console.error('Frontend error:', err);
+    status.textContent = '❌ System Exception: ' + err.message;
+    console.error(err);
   }
 }
 
-// ============================================
-// RENDER RESULTS
-// Builds the cards UI from the analysis JSON
-// ============================================
 function renderResults(data) {
-  // Find all impostors for the alert message
   const impostors = data.members.filter(m => m.verdict === 'IMPOSTOR');
-
-  // Sort by suspicion score — worst person shown first
   const sorted = [...data.members].sort((a, b) => b.suspicionScore - a.suspicionScore);
 
-  // Build summary box
   let html = `
     <div class="summary-box">
-      <h2>📋 Detective Report — ${data.projectName}</h2>
+      <h2>📋 Project Forensic Audit Result — ${data.projectName}</h2>
       <p>${data.summary}</p>
       ${impostors.length > 0
         ? `<p class="alert-impostor">🚨 ${impostors.length} IMPOSTOR${impostors.length > 1 ? 'S' : ''} DETECTED: ${impostors.map(m => m.name).join(', ')}</p>`
-        : `<p class="alert-clear">✅ No clear freeloaders found.</p>`
+        : `<p class="alert-clear">✅ System Clear: No clear slackers detected on team infrastructure.</p>`
       }
       <div class="powered-by">
-        Powered by:
+        Verified Hardware Integrations:
         ${(data.sponsorsUsed || []).map(s => `<span>${s}</span>`).join('')}
       </div>
     </div>
     <div class="grid">
   `;
 
-  // Build one card per member
   sorted.forEach(m => {
-    // Card border color based on verdict
-    const cardClass = m.verdict === 'IMPOSTOR' ? 'impostor'
-                    : m.verdict === 'SUSPICIOUS' ? 'suspicious'
-                    : 'innocent';
-
-    // Score bar color based on score number
-    const barClass = m.suspicionScore >= 70 ? 'bar-red'
-                   : m.suspicionScore >= 40 ? 'bar-orange'
-                   : 'bar-green';
-
-    // Big score number color
-    const scoreColor = m.suspicionScore >= 70 ? '#ff4757'
-                     : m.suspicionScore >= 40 ? '#ffa502'
-                     : '#2ed573';
+    const cardClass = m.verdict === 'IMPOSTOR' ? 'impostor' : m.verdict === 'SUSPICIOUS' ? 'suspicious' : 'innocent';
+    const barClass = m.suspicionScore >= 70 ? 'bar-red' : m.suspicionScore >= 40 ? 'bar-orange' : 'bar-green';
+    const scoreColor = m.suspicionScore >= 70 ? '#ff4757' : m.suspicionScore >= 40 ? '#ffa502' : '#2ed573';
 
     html += `
       <div class="card ${cardClass}">
-
-        <!-- Member name and verdict badge -->
         <div class="card-name">${m.name}</div>
         <span class="badge ${m.verdict}">${m.verdict}</span>
-
-        <!-- Big suspicion score -->
         <div class="score-big" style="color:${scoreColor}">
-          ${m.suspicionScore}
-          <span style="font-size:1rem;color:#444;font-weight:400">/100</span>
+          ${m.suspicionScore}<span style="font-size:1rem;color:#444;font-weight:400">/100</span>
         </div>
         <div class="score-sub">Suspicion Score</div>
-
-        <!-- Score progress bar -->
         <div class="bar-track">
           <div class="bar-fill ${barClass}" style="width:${m.suspicionScore}%"></div>
         </div>
-
-        <!-- Git stats -->
         <div class="card-stats">
           Commits: <b>${m.commits}</b> &nbsp;|&nbsp;
-          Lines added: <b>${m.linesAdded}</b><br>
-          Last commit: <b>${m.lastCommitTime}</b>
+          Net Code Impact: <b>+${m.linesAdded}</b> lines<br>
+          Last Verified Activity: <b>${m.lastCommitTime}</b>
         </div>
-
-        <!-- Kimi AI evidence sentence -->
-        <div class="card-evidence">🔍 ${m.evidence}</div>
-
-        <!-- Red IMPOSTOR stamp only on impostors -->
+        <div class="card-evidence">🔍 Assessment: ${m.evidence}</div>
         ${m.verdict === 'IMPOSTOR' ? '<div class="stamp go">IMPOSTOR</div>' : ''}
-
       </div>
     `;
   });
 
   html += `</div>
     <button class="btn-download" onclick="downloadReport()">
-      📄 Download Evidence Dossier
+      📄 Download Evidence Dossier (SenseNova U1 Compiled)
     </button>
   `;
 
   document.getElementById('results').innerHTML = html;
 }
 
-// ============================================
-// DOWNLOAD REPORT
-// Saves results as a .txt file
-// ============================================
-function downloadReport() {
-  const content = document.getElementById('results').innerText;
-  const blob = new Blob([content], { type: 'text/plain' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'evidence-dossier.txt';
-  a.click();
+// =========================================================================
+// [SPONSOR 5 FRONTEND CALL] - SenseNova Dossier Generator Action
+// =========================================================================
+async function downloadReport() {
+  if (!currentGlobalAnalysisData) {
+    alert("No active audit telemetry available to map.");
+    return;
+  }
+  
+  try {
+    const res = await fetch('/generate-dossier', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ auditData: currentGlobalAnalysisData })
+    });
+    
+    const data = await res.json();
+    
+    const blob = new Blob([data.pdfContent], { type: 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `Evidence_Dossier_Report_${currentGlobalAnalysisData.projectName.replace(/\s+/g, '_')}.txt`;
+    a.click();
+  } catch (e) {
+    console.error("Dossier compilation failed:", e);
+  }
 }
