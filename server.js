@@ -29,6 +29,7 @@ const DAYTONA_KEY = 'dtn_2c0fb157d945bf681c6bd2b7b9ddb6ab5daa8f8d47da5f11860493d
 // MAIN ENDPOINT - this runs when user clicks
 // "Investigate" button on the frontend
 // ============================================
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
 app.post('/analyze', async (req, res) => {
   const { repoUrl } = req.body; // get the GitHub URL the user typed
   console.log('Starting investigation on:', repoUrl);
