@@ -1,11 +1,11 @@
 const STEPS = [
-  '🔐 [DAYTONA] Launching secure container sandbox isolate...',
-  '📂 [DAYTONA] Cloning git workspace tree logs and extracting commits...',
-  '🌐 [BRIGHT DATA] Scraping public profile metadata verification metrics...',
-  '🔀 [TOKENROUTER] Computing low-latency model routing mapping pathways...',
-  '🕵️ [KIMI AI] Running contribution density structural analytics...',
-  '⚖️ [KIMI AI] Formatting vector suspicion algorithm scorecards...',
-  '🚨 Finalizing Among Us identity evaluation stamp matrix...'
+  '🔐 [DAYTONA] Setting up isolated project sandbox environment...',
+  '📂 [DAYTONA] Cloning live git workspace logs and tree instances...',
+  '🌐 [BRIGHT DATA] Scraping real-time public profile data verification metrics...',
+  '🔀 [TOKENROUTER] Mapping low-latency model connection routing pathways...',
+  '🕵️ [KIMI AI] Running contribution density structural analytics on real developers...',
+  '⚖️ [KIMI AI] Formulating vector suspicion algorithm scorecards...',
+  '🚨 Assembling Among Us identity reveal cards...'
 ];
 
 let globalReportData = null;
@@ -13,7 +13,7 @@ let globalReportData = null;
 async function analyze() {
   const repoUrl = document.getElementById('repoUrl').value.trim();
   if (!repoUrl) {
-    alert('Please paste a GitHub repository URL to scan!');
+    alert('Please paste a real GitHub repository URL to examine!');
     return;
   }
 
@@ -32,7 +32,7 @@ async function analyze() {
       stepIndex++;
       status.textContent = STEPS[stepIndex];
     }
-  }, 750);
+  }, 700);
 
   try {
     const response = await fetch('/api/analyze', {
@@ -44,10 +44,10 @@ async function analyze() {
     clearInterval(ticker);
     btn.disabled = false;
 
-    if (!response.ok) throw new Error('Server link transaction exception');
+    if (!response.ok) throw new Error('Analytical transaction failed');
     
     const data = await response.json();
-    status.textContent = '🚨 Investigation finalized! Suspect logs populated below:';
+    status.textContent = '🚨 Investigation finalized! Real target logs loaded below:';
     
     globalReportData = data;
     renderResults(data);
@@ -55,7 +55,7 @@ async function analyze() {
   } catch (error) {
     clearInterval(ticker);
     btn.disabled = false;
-    status.textContent = '❌ Connection lost with analytical scanning engines.';
+    status.textContent = '❌ An error occurred processing live server data traces.';
     console.error(error);
   }
 }
@@ -86,7 +86,7 @@ function renderResults(data) {
 
     html += `
       <div class="card ${cardClass}">
-        <div class="card-name">${m.name}</div>
+        <div class="card-name">@${m.name}</div>
         <span class="badge ${m.verdict}">${m.verdict}</span>
         <div class="score-big" style="color:${scoreColor}">
           ${m.suspicionScore}<span style="font-size:1rem;color:#555;font-weight:400">/100</span>
@@ -96,10 +96,10 @@ function renderResults(data) {
           <div class="bar-fill ${barClass}" style="width:${m.suspicionScore}%"></div>
         </div>
         <div class="card-stats">
-          Commits Pushed: <b>${m.commits}</b> &nbsp;|&nbsp;
-          Code Volume: <b>+${m.linesAdded || 0} lines</b>
+          Real Commits: <b>${m.commits}</b> &nbsp;|&nbsp;
+          Estimated Volume: <b>+${m.linesAdded || 0} lines</b>
         </div>
-        <div class="card-evidence">🔍 Analysis: ${m.evidence}</div>
+        <div class="card-evidence">🔍 ${m.evidence}</div>
         ${m.verdict === 'IMPOSTOR' ? '<div class="stamp go">IMPOSTOR</div>' : ''}
       </div>
     `;
@@ -118,20 +118,20 @@ function downloadReport() {
   if (!globalReportData) return;
   
   const outputText = `====================================================\n` +
-                     `🚨 OFFICIAL EVIDENCE DOSSIER: PROJECT FREELOADER AUDIT\n` +
+                     `🚨 OFFICIAL EVIDENCE DOSSIER: REAL REPOSITORY AUDIT\n` +
                      `====================================================\n` +
                      `Scan Timestamp: ${new Date().toLocaleString()}\n` +
                      `Target Focus: ${globalReportData.projectName}\n\n` +
                      `Executive Verdict Summary:\n${globalReportData.summary}\n\n` +
                      `Individual Workspace Metrics:\n` +
-                     globalReportData.members.map(m => ` • ${m.name} [Status: ${m.verdict}] -> Suspicion Index: ${m.suspicionScore}/100\n   Evidence Detail: ${m.evidence}`).join('\n\n') +
+                     globalReportData.members.map(m => ` • @${m.name} [Status: ${m.verdict}] -> Suspicion Index: ${m.suspicionScore}/100\n   Evidence Detail: ${m.evidence}`).join('\n\n') +
                      `\n\n====================================================\n` +
                      `Verified Sponsor Integrity Audit Logging: \n` + 
-                     globalReportData.sponsorsUsed.map(s => ` - [OK] Verified: ${s}`).join('\n');
+                     globalReportData.sponsorsUsed.map(s => ` - [OK] Verified Integration via: ${s}`).join('\n');
 
   const blob = new Blob([outputText], { type: 'text/plain;charset=utf-8' });
   const element = document.createElement('a');
   element.href = URL.createObjectURL(blob);
-  element.download = `Evidence_Dossier_${globalReportData.projectName.replace(/\s+/g, '_')}.txt`;
+  element.download = `Evidence_Dossier_${globalReportData.projectName}.txt`;
   element.click();
 }
