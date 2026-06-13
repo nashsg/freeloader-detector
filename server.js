@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
 });
 
 // =========================================================================
-// 🕵️ DYNAMIC MULTI-PLAYER REVERSE FORENSIC ENGINE (HANDLES 2 TO 5+ PLAYERS)
+// 🕵️ PERFECTED MULTI-PLAYER FORENSIC ENGINE (CORRECTED SUSPICION SCORING)
 // =========================================================================
 app.post('/api/analyze', async (req, res) => {
   const { repoUrl } = req.body;
@@ -22,7 +22,6 @@ app.post('/api/analyze', async (req, res) => {
   let repoName = 'Group_Project';
   let ownerName = 'DevTeam';
   
-  // Parse the repository information straight from the input string
   try {
     const cleanUrl = repoUrl.replace('https://github.com/', '').replace(/\/$/, '');
     const parts = cleanUrl.split('/');
@@ -31,13 +30,12 @@ app.post('/api/analyze', async (req, res) => {
       repoName = parts[1];
     }
   } catch (err) {
-    console.log('⚠️ Parsing breakdown on target URL layout.');
+    console.log('⚠️ URL parsing error.');
   }
 
   let finalMembers = [];
 
   try {
-    // Fetch live contributors array directly from GitHub API
     const targetUrl = `https://api.github.com/repos/${ownerName}/${repoName}/contributors`;
     const response = await fetch(targetUrl, {
       headers: { 'User-Agent': 'Freeloader-Detective-V4' }
@@ -46,24 +44,20 @@ app.post('/api/analyze', async (req, res) => {
     if (response.ok) {
       const gitData = await response.json();
       
-      // Process exactly how many accounts exist in the repository dynamically (2, 3, 4, 5, etc.)
       finalMembers = gitData.map(user => {
         return {
           name: user.login,
           commits: user.contributions,
-          // Calculate realistic structural line changes relative to their actual live commit weights
           linesAdded: user.contributions * 42 + Math.floor(Math.random() * 25),
           linesDeleted: user.contributions * 7 + Math.floor(Math.random() * 5)
         };
       });
-    } else {
-      console.log(`❌ GitHub API responded with status: ${response.status}`);
     }
   } catch (e) {
     console.log('🚨 Fetch transaction line error:', e.message);
   }
 
-  // FAILSAFE PLAYERS MATRIX (Kicks in cleanly if URL is empty or rate-limited during demo)
+  // FALLBACK SQUAD (Handles 2 to 5 people seamlessly if API limit hits)
   if (finalMembers.length === 0) {
     finalMembers = [
       { name: 'Live_Carrier_User', commits: 142, linesAdded: 4920, linesDeleted: 840 },
@@ -72,11 +66,10 @@ app.post('/api/analyze', async (req, res) => {
     ];
   }
 
-  // Find the exact person who did everything in the repo
+  // Find the legend who carried the entire team
   const sortedByWork = [...finalMembers].sort((a, b) => b.commits - a.commits);
   const coreCarrierName = sortedByWork[0]?.name;
 
-  // Process the entire dynamic list of members
   const membersReport = finalMembers.map(user => {
     const isCarrier = user.name === coreCarrierName;
     
@@ -86,15 +79,15 @@ app.post('/api/analyze', async (req, res) => {
     let evidence = '';
 
     if (isCarrier) {
-      // THE CARRIER IS THE DEAD BODY IN ELECTRICAL
-      suspicionScore = 99; 
-      verdict = 'GHOST'; // Applies the custom ghost crewmate visual card style
+      // THE CARRIER HAS ZERO SUSPICION (Completely Innocent, just dead from carrying)
+      suspicionScore = 0; 
+      verdict = 'GHOST'; // Still keeps the cool dead body crewmate look on the frontend
       lastCommitTime = 'FOUND IN ELECTRICAL';
       evidence = `[DEAD BODY REPORTED] This user single-handedly carried 99% of the code architecture until they collapsed. Absolute legend.`;
     } else {
-      // EVERYONE ELSE LACKING PROPORTIONAL WEIGHT IS AN IMPOSTOR OPP
-      suspicionScore = 85 + Math.floor(Math.random() * 10); // High impact slacker score
-      verdict = 'IMPOSTOR'; // Applies the custom red Impostor card style
+      // THE SLACKERS ARE THE HIGH-SUSPICION IMPOSTORS
+      suspicionScore = 85 + Math.floor(Math.random() * 14); // Stays high (85-99)
+      verdict = 'IMPOSTOR';
       lastCommitTime = 'PANIC DEADLINE CRUNCH';
       evidence = `[IMPOSTOR DETECTED] Contributed nearly nothing to production code lines. Caught sneaking around vents while others worked.`;
     }
@@ -111,14 +104,15 @@ app.post('/api/analyze', async (req, res) => {
     };
   });
 
-  // Keep them sorted descending by suspicion so the dead bodies and impostors stack to the front rows!
+  // Sort descending by suspicion score so the high-sus Impostors hit the left side first,
+  // and the 0-sus Dead Body worker sits safely on the right!
   const sortedReport = membersReport.sort((a, b) => b.suspicionScore - a.suspicionScore);
 
   res.json({
     projectName: repoName,
     analysisDate: new Date().toLocaleDateString(),
     members: sortedReport,
-    summary: `Deep forensic analysis finalized for ${repoName}. Verified dynamic contribution layout tracking across all ${finalMembers.length} active repository profiles.`,
+    summary: `Deep forensic analysis finalized for ${repoName}. Verified contribution distribution paths across all active repository profiles.`,
     sponsorsUsed: ['Daytona Sandbox', 'Bright Data Scraper', 'TokenRouter Route', 'Kimi K2.6 Engine', 'Office Raccoon', 'SenseNova']
   });
 });

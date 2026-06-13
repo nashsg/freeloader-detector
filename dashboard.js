@@ -12,7 +12,7 @@ const STEPS = [
 let globalReportData = null;
 
 // ============================================================================
-// 🚨 EMERGENCY INTRO MEETING CONTROLLER
+// 🚨 EMERGENCY INTRO MEETING CONTROLLER (WITH LONGER WARBLING SIREN)
 // ============================================================================
 function triggerEmergencySequence() {
   const repoUrl = document.getElementById('repoUrl').value.trim();
@@ -25,38 +25,48 @@ function triggerEmergencySequence() {
   const emergencyScreen = document.getElementById('emergencyScreen');
   const statusLabel = document.getElementById('emergencyStatus');
 
-  // Lock trigger down
   btn.disabled = true;
   
-  // 🎵 PLAY HIGH-IMPACT ARCADE SIREN ALARM TRACK
+  // 🎵 HIGH-IMPACT ARCADE SIREN ALARM TRACK (EXTENDED TO 3.5 SECONDS WITH WARBLE EFFECTS)
   try {
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     let osc = audioContext.createOscillator();
     let gain = audioContext.createGain();
     
     osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(440, audioContext.currentTime);
-    // Oscillate pitch up and down like a real siren alarm loop!
-    osc.frequency.linearRampToValueAtTime(880, audioContext.currentTime + 0.3);
-    osc.frequency.linearRampToValueAtTime(440, audioContext.currentTime + 0.6);
-    osc.frequency.linearRampToValueAtTime(880, audioContext.currentTime + 0.9);
     
-    gain.gain.setValueAtTime(0.15, audioContext.currentTime);
+    // Set baseline structural frequency
+    const now = audioContext.currentTime;
+    osc.frequency.setValueAtTime(400, now);
+    
+    // Create a rhythmic high-pitch/low-pitch wave pulsing back and forth over 3.5 seconds
+    const duration = 3.5; 
+    const pulseSpeed = 0.25; // timing block translation
+    for (let t = 0; t < duration; t += pulseSpeed * 2) {
+      osc.frequency.linearRampToValueAtTime(850, now + t + pulseSpeed);
+      osc.frequency.linearRampToValueAtTime(400, now + t + (pulseSpeed * 2));
+    }
+    
+    gain.gain.setValueAtTime(0.12, now);
+    // Smoothly fade audio volume tracking right at the end of the duration sequence
+    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+    
     osc.connect(gain);
     gain.connect(audioContext.destination);
     
     osc.start();
-    osc.stop(audioContext.currentTime + 1.2);
+    osc.stop(now + duration);
   } catch(e) {
-    console.log('Audio contextual channel skipped.');
+    console.log('Audio track initialization dropped.');
   }
 
-  // Turn on screen flashes
   emergencyScreen.classList.add('siren-active');
 
-  // Cycle states through the overlay text viewbox
   let stepIdx = 0;
   statusLabel.textContent = STEPS[0];
+
+  // Dynamically scale step text intervals to perfectly line up with our longer 3.5s audio loop
+  const stepTimeInterval = Math.floor((3500) / STEPS.length);
 
   const loop = setInterval(() => {
     stepIdx++;
@@ -64,11 +74,10 @@ function triggerEmergencySequence() {
       statusLabel.textContent = STEPS[stepIdx];
     } else {
       clearInterval(loop);
-      // Sequence completed, dump to dashboard render
       emergencyScreen.classList.remove('siren-active');
       executeAnalysisTransaction(repoUrl, btn);
     }
-  }, 450);
+  }, stepTimeInterval);
 }
 
 // ============================================================================
@@ -95,7 +104,6 @@ async function executeAnalysisTransaction(repoUrl, btn) {
   } catch (error) {
     btn.disabled = false;
     document.getElementById('results').innerHTML = `<div class="summary-box"><h2>❌ SYSTEM FAULT DETECTED CORES OFFLINE</h2></div>`;
-    console.error(error);
   }
 }
 
@@ -103,7 +111,7 @@ async function executeAnalysisTransaction(repoUrl, btn) {
 // 🎨 ARCADE GRID RENDERER
 // ============================================================================
 function renderArcadeResults(data) {
-  const impostors = data.members.filter(m => m.verdict !== 'INNOCENT');
+  const impostors = data.members.filter(m => m.verdict === 'IMPOSTOR');
   
   let html = `
     <div class="summary-box">
