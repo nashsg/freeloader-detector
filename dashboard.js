@@ -33,7 +33,7 @@ async function analyze() {
       stepIndex++;
       status.textContent = STEPS[stepIndex];
     }
-  }, 500);
+  }, 400);
 
   try {
     const response = await fetch('/api/analyze', {
@@ -63,6 +63,8 @@ async function analyze() {
 
 function renderResults(data) {
   const impostors = data.members.filter(m => m.verdict === 'IMPOSTOR');
+  
+  // Sort by highest suspicion score to ensure IMPOSTORS show up first!
   const sorted = [...data.members].sort((a, b) => b.suspicionScore - a.suspicionScore);
 
   let html = `
@@ -71,11 +73,8 @@ function renderResults(data) {
       <p style="margin-bottom: 12px; color: #ccc;">${data.summary}</p>
       ${impostors.length > 0
         ? `<p class="alert-impostor">🚨 ${impostors.length} IMPOSTORS DETECTED: ${impostors.map(m => `@${m.name}`).join(', ')}</p>`
-        : `<p class="alert-clear">✅ System Stable: Everyone contributed cleanly.</p>`
+        : `<p class="alert-clear">✅ System Stable: Workloads are completely balanced.</p>`
       }
-      <div class="powered-by" style="margin-top: 14px; font-size: 0.85rem; color: #777;">
-        Verified Stack Validation: ${(data.sponsorsUsed || []).map(s => `<span style="background:#141424; padding:4px 8px; margin:0 4px; border-radius:4px; border:1px solid #ff4757; color:#fff; font-weight:bold;">${s}</span>`).join(' ')}
-      </div>
     </div>
     <div class="grid">
   `;
