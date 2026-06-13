@@ -1,3 +1,4 @@
+// Steps shown in status bar while AI is working
 const STEPS = [
   '🔐 Daytona: spinning up secure sandbox...',
   '📂 Daytona: cloning repo, reading commit history...',
@@ -11,8 +12,14 @@ const STEPS = [
 
 let globalReportData = null;
 
+// ============================================
+// ANALYZE FUNCTION
+// Runs when user clicks Investigate button
+// ============================================
 async function analyze() {
   const repoUrl = document.getElementById('repoUrl').value.trim();
+  const githubToken = document.getElementById('githubToken') ? document.getElementById('githubToken').value.trim() : '';
+  
   if (!repoUrl) {
     alert('Please paste a GitHub repo URL first!');
     return;
@@ -22,9 +29,11 @@ async function analyze() {
   const status = document.getElementById('status');
   const results = document.getElementById('results');
 
+  // Reset UI
   btn.disabled = true;
   results.innerHTML = '';
 
+  // Start cycling through status steps
   let stepIndex = 0;
   status.textContent = STEPS[0];
   
@@ -39,13 +48,16 @@ async function analyze() {
     const response = await fetch('/api/analyze', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ repoUrl })
+      body: JSON.stringify({ 
+        repoUrl: repoUrl,
+        userToken: githubToken
+      })
     });
 
     clearInterval(ticker);
     btn.disabled = false;
 
-    if (!response.ok) throw new Error('Transaction exception occurred.');
+    if (!response.ok) throw new Error('Transaction execution exception');
     
     const data = await response.json();
     status.textContent = '🚨 Investigation finalized! Real target logs loaded below:';
@@ -61,6 +73,10 @@ async function analyze() {
   }
 }
 
+// ============================================
+// RENDER CARD RESULTS
+// Sorts by highest Suspicion Score so IMPOSTORS show up first!
+// ============================================
 function renderResults(data) {
   const impostors = data.members.filter(m => m.verdict === 'IMPOSTOR');
   
@@ -88,8 +104,9 @@ function renderResults(data) {
       <div class="card ${cardClass}">
         <div class="card-name">@${m.name}</div>
         <span class="badge ${m.verdict}">${m.verdict}</span>
-        <div class="score-big" style="color:${scoreColor}">
-          ${m.suspicionScore}<span style="font-size:1rem;color:#444;font-weight:400">/100</span>
+        
+        <div class="score-big" style="color:${scoreColor};">
+          ${m.suspicionScore}<span style="font-size:1rem; color:#ffffff; font-weight:400">/100</span>
         </div>
         <div class="score-sub">Suspicion Score</div>
 
@@ -99,11 +116,13 @@ function renderResults(data) {
 
         <div class="card-stats">
           Commits: <b>${m.commits}</b> &nbsp;|&nbsp;
-          Lines added: <b>${m.linesAdded}</b><br>
+          Lines added: <b>+${m.linesAdded}</b><br>
+          Lines deleted: <b>-${m.linesDeleted}</b> &nbsp;|&nbsp;
           Last commit: <b>${m.lastCommitTime}</b>
         </div>
 
         <div class="card-evidence">🔍 ${m.evidence}</div>
+
         ${m.verdict === 'IMPOSTOR' ? '<div class="stamp go">IMPOSTOR</div>' : ''}
       </div>
     `;

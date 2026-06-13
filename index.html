@@ -6,6 +6,23 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="input-wrap">
+    <input
+      type="text"
+      id="repoUrl"
+      placeholder="Paste GitHub repo URL — e.g. https://github.com/team/project"
+      style="margin-bottom: 10px;"
+    />
+    <input
+      type="password"
+      id="githubToken"
+      placeholder="🔑 Optional: Paste your GitHub Token for 100% accurate line stats"
+      style="margin-bottom: 15px; width: 100%; padding: 12px; background: #12121f; border: 1px solid #333; color: white; border-radius: 8px;"
+    />
+    <button class="btn-investigate" id="analyzeBtn" onclick="analyze()">
+      🔍 Investigate for Freeloaders
+    </button>
+  </div>
 
   <div class="header">
     <div class="crewmates">

@@ -37,183 +37,176 @@ body {
 }
 .sponsor-pill {
   background: #12121f;
-  border: 1px solid #2a2a3e;
+  border: 1px solid #222;
+  padding: 6px 14px;
   border-radius: 20px;
-  padding: 6px 16px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: #888;
 }
 
 /* ============================================
-   INPUT AREA
+   INPUT CONTAINER
 ============================================ */
 .input-wrap {
-  max-width: 640px;
-  margin: 36px auto 0;
+  max-width: 600px;
+  margin: 0 auto 40px;
   padding: 0 20px;
 }
 .input-wrap input {
   width: 100%;
-  padding: 16px 20px;
-  border-radius: 12px;
-  border: 2px solid #2a2a3e;
+  padding: 16px;
   background: #12121f;
+  border: 2px solid #222;
+  border-radius: 12px;
   color: #fff;
   font-size: 1rem;
-  margin-bottom: 14px;
-  outline: none;
-  transition: border-color 0.2s;
+  margin-bottom: 12px;
+  transition: border-color 0.3s;
 }
-.input-wrap input:focus { border-color: #ff4757; }
-.input-wrap input::placeholder { color: #444; }
-
+.input-wrap input:focus {
+  outline: none;
+  border-color: #ff4757;
+}
 .btn-investigate {
   width: 100%;
   padding: 16px;
-  border-radius: 12px;
   background: #ff4757;
   color: #fff;
-  font-size: 1.15rem;
-  font-weight: 800;
-  border: none;
-  cursor: pointer;
-  letter-spacing: 0.5px;
-  transition: all 0.2s;
-}
-.btn-investigate:hover { background: #ff6b81; transform: scale(1.01); }
-.btn-investigate:disabled { background: #333; cursor: not-allowed; transform: none; }
-
-/* ============================================
-   STATUS BAR
-============================================ */
-.status {
-  text-align: center;
-  color: #ffa502;
-  font-size: 0.95rem;
-  font-weight: 600;
-  min-height: 32px;
-  margin: 18px 20px;
-}
-
-/* ============================================
-   RESULTS AREA
-============================================ */
-.results {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 20px 80px;
-}
-
-/* Summary box */
-.summary-box {
-  background: #12121f;
-  border: 1px solid #2a2a3e;
-  border-radius: 16px;
-  padding: 24px;
-  margin-bottom: 28px;
-}
-.summary-box h2 {
-  color: #ffa502;
   font-size: 1.1rem;
-  margin-bottom: 12px;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
 }
-.summary-box p { color: #bbb; line-height: 1.7; font-size: 0.95rem; }
-.alert-impostor { color: #ff4757; font-weight: 700; margin-top: 12px; }
-.alert-clear { color: #2ed573; font-weight: 700; margin-top: 12px; }
-.powered-by { margin-top: 16px; font-size: 0.78rem; color: #444; }
-.powered-by span {
-  background: #0f0f1a;
-  border: 1px solid #2a2a3e;
-  border-radius: 10px;
-  padding: 2px 10px;
-  margin-right: 6px;
-  color: #666;
+.btn-investigate:hover { background: #ff6b81; }
+.btn-investigate:disabled { background: #444; cursor: not-allowed; }
+
+/* ============================================
+   STATUS TRACKER
+============================================ */
+.status-box {
+  text-align: center;
+  font-family: monospace;
+  color: #ff4757;
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+  min-height: 24px;
 }
 
 /* ============================================
-   MEMBER CARDS GRID
+   RESULTS SCREEN INTERACTION
 ============================================ */
+.summary-box {
+  max-width: 1000px;
+  margin: 0 auto 30px;
+  background: #12121f;
+  border: 1px solid #222;
+  padding: 24px;
+  border-radius: 16px;
+}
+.summary-box h2 { color: #ff4757; margin-bottom: 8px; }
+.alert-impostor { color: #ff4757; font-weight: bold; font-size: 1.1rem; margin-top: 8px; }
+.alert-clear { color: #2ed573; font-weight: bold; font-size: 1.1rem; margin-top: 8px; }
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 18px;
-}
-.card {
-  background: #12121f;
-  border-radius: 16px;
-  padding: 24px;
-  border: 2px solid #2a2a3e;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s;
-}
-.card:hover { transform: translateY(-4px); }
-.card.impostor { border-color: #ff4757; box-shadow: 0 0 30px rgba(255,71,87,0.2); }
-.card.suspicious { border-color: #ffa502; box-shadow: 0 0 16px rgba(255,165,2,0.15); }
-.card.innocent { border-color: #2ed573; }
-
-.card-name { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; }
-
-.badge {
-  display: inline-block;
-  padding: 4px 14px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 1px;
-  margin-bottom: 18px;
-}
-.badge.IMPOSTOR  { background: #ff4757; color: #fff; }
-.badge.SUSPICIOUS { background: #ffa502; color: #000; }
-.badge.INNOCENT  { background: #2ed573; color: #000; }
-
-.score-big { font-size: 2.4rem; font-weight: 900; line-height: 1; }
-.score-sub { font-size: 0.75rem; color: #555; margin-bottom: 10px; margin-top: 3px; }
-
-.bar-track { background: #1e1e30; border-radius: 8px; height: 10px; margin-bottom: 18px; }
-.bar-fill { height: 10px; border-radius: 8px; transition: width 1.4s cubic-bezier(0.22,1,0.36,1); }
-.bar-red    { background: linear-gradient(90deg, #ff6b6b, #ff4757); }
-.bar-orange { background: linear-gradient(90deg, #ffd89b, #ffa502); }
-.bar-green  { background: linear-gradient(90deg, #96fbc4, #2ed573); }
-
-.card-stats { font-size: 0.85rem; color: #555; line-height: 2; }
-.card-stats b { color: #aaa; font-weight: 600; }
-
-.card-evidence {
-  margin-top: 14px;
-  font-size: 0.83rem;
-  color: #777;
-  font-style: italic;
-  border-top: 1px solid #1e1e30;
-  padding-top: 12px;
-  line-height: 1.6;
+  gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 /* ============================================
-   AMONG US IMPOSTOR STAMP
+   CREWMATE EVIDENCE CARDS
+============================================ */
+.card {
+  background: #12121f;
+  border: 2px solid #222;
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden; /* Keeps stamp clipped beautifully inside layout */
+  transition: transform 0.3s;
+}
+.card:hover { transform: translateY(-4px); }
+.card.impostor { border-color: rgba(255,71,87,0.3); box-shadow: 0 0 20px rgba(255,71,87,0.1); }
+.card.innocent { border-color: rgba(46,213,115,0.3); box-shadow: 0 0 20px rgba(46,213,115,0.1); }
+
+.card-name { font-size: 1.3rem; font-weight: 700; margin-bottom: 12px; color: #fff; }
+.badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 16px; }
+.badge.IMPOSTOR { background: rgba(255,71,87,0.2); color: #ff4757; }
+.badge.INNOCENT { background: rgba(46,213,115,0.2); color: #2ed573; }
+
+/* Fixed Contrast Scoring Values */
+.score-big { 
+  font-size: 3.5rem; 
+  font-weight: 900; 
+  line-height: 1; 
+  margin-bottom: 2px;
+  position: relative;
+  z-index: 2; /* Layer details over background items */
+}
+.score-sub { font-size: 0.8rem; color: #888 !important; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+
+/* Progress Bar Components */
+.bar-track { background: #0a0a14; height: 8px; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; width: 0; }
+.bar-fill.bar-red { background: #ff4757; }
+.bar-fill.bar-green { background: #2ed573; }
+
+/* Fixed Text Contrast Colors */
+.card-stats { 
+  font-size: 0.9rem; 
+  color: #ffffff !important; /* Forces clean visibility over red backdrops */
+  line-height: 1.6; 
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 2;
+}
+.card-stats b {
+  color: #ffffff !important;
+}
+
+.card-evidence { 
+  font-size: 0.9rem; 
+  color: #e0e0e0 !important; 
+  background: rgba(0,0,0,0.4) !important; 
+  padding: 10px; 
+  border-radius: 8px;
+  border-left: 3px solid #ff4757;
+  position: relative;
+  z-index: 2;
+}
+.card.innocent .card-evidence { border-left-color: #2ed573; }
+
+/* ============================================
+   🔥 REPAIRED CRITICAL IMPOSTOR STAMP 
 ============================================ */
 .stamp {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(-15deg) scale(0);
-  background: rgba(255,71,87,0.1);
+  transform: translate(-50%, -50%) rotate(-15deg) scale(3);
   border: 5px solid #ff4757;
   color: #ff4757;
-  font-size: 1.6rem;
+  background: rgba(18, 18, 31, 0.9); /* Opaque dark background to blank out items underneath */
+  font-size: 1.8rem;
   font-weight: 900;
-  padding: 10px 20px;
+  padding: 10px 24px;
   border-radius: 8px;
   letter-spacing: 4px;
   pointer-events: none;
   opacity: 0;
+  z-index: 99 !important; /* Pushes the stamp all the way to the top */
 }
 .stamp.go {
-  animation: stampIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
-  animation-delay: 1s;
+  animation: stampIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation-delay: 0.2s;
 }
 @keyframes stampIn {
-  to { transform: translate(-50%,-50%) rotate(-15deg) scale(1); opacity: 1; }
+  to { transform: translate(-50%, -50%) rotate(-15deg) scale(1); opacity: 1; }
 }
 
 /* ============================================
@@ -232,27 +225,5 @@ body {
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s;
-  text-align: center;
 }
-.btn-download:hover { background: #7bed9f; transform: scale(1.02); }
-
-/* ============================================
-   FLOATING CREWMATE DOTS ANIMATION
-============================================ */
-.crewmates {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin: 30px 0 10px;
-}
-.crewmate {
-  font-size: 2rem;
-  animation: float 2s ease-in-out infinite;
-}
-.crewmate:nth-child(2) { animation-delay: 0.3s; }
-.crewmate:nth-child(3) { animation-delay: 0.6s; }
-.crewmate:nth-child(4) { animation-delay: 0.9s; }
-@keyframes float {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
+.btn-download:hover { transform: scale(1.02); background: #26af5f; }
