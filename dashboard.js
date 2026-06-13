@@ -9,7 +9,7 @@ const STEPS = [
   '🚨 Preparing impostor reveal...'
 ];
 
-let globalData = null;
+let globalReportData = null;
 
 async function analyze() {
   const repoUrl = document.getElementById('repoUrl').value.trim();
@@ -25,15 +25,15 @@ async function analyze() {
   btn.disabled = true;
   results.innerHTML = '';
 
-  let i = 0;
+  let stepIndex = 0;
   status.textContent = STEPS[0];
   
   const ticker = setInterval(() => {
-    if (i < STEPS.length - 1) {
-      i++;
-      status.textContent = STEPS[i];
+    if (stepIndex < STEPS.length - 1) {
+      stepIndex++;
+      status.textContent = STEPS[stepIndex];
     }
-  }, 600);
+  }, 500);
 
   try {
     const response = await fetch('/api/analyze', {
@@ -45,46 +45,37 @@ async function analyze() {
     clearInterval(ticker);
     btn.disabled = false;
 
-    if (!response.ok) throw new Error('Route transaction execution exception');
+    if (!response.ok) throw new Error('Transaction exception occurred.');
     
     const data = await response.json();
-    globalData = data;
+    status.textContent = '🚨 Investigation finalized! Real target logs loaded below:';
     
-    status.textContent = '🚨 Audit Complete! Targets Discovered:';
+    globalReportData = data;
     renderResults(data);
 
   } catch (error) {
     clearInterval(ticker);
     btn.disabled = false;
-    status.textContent = '❌ Failed to process repository data metrics.';
+    status.textContent = '❌ An error occurred connecting to live backend engines.';
     console.error(error);
   }
 }
 
 function renderResults(data) {
   const impostors = data.members.filter(m => m.verdict === 'IMPOSTOR');
-  const totalMembers = data.members.length;
-  
-  // NEW FEATURE: Code contribution ratio formula tracking
-  const totalCommits = data.members.reduce((sum, m) => sum + m.commits, 0);
   const sorted = [...data.members].sort((a, b) => b.suspicionScore - a.suspicionScore);
 
   let html = `
     <div class="summary-box">
       <h2>📋 Project Forensic Evaluation — ${data.projectName}</h2>
-      <p style="margin: 8px 0; font-size: 1.1rem; color: #ddd;">${data.summary}</p>
-      
-      <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin: 15px 0; font-family: monospace; border-left: 4px solid #ff4757;">
-         📊 <b>WORKSPACE METRICS PROFILE:</b><br>
-         • Total Group Members: ${totalMembers}<br>
-         • Core Code Carry Contribution Ratio: <b>${((sorted[sorted.length - 1].commits / totalCommits) * 100).toFixed(1)}%</b> of total work done by 1 person.<br>
-         • Traitor Concentration Level: <b>${((impostors.length / totalMembers) * 100).toFixed(0)}%</b> of the group slacked.
-      </div>
-
+      <p style="margin-bottom: 12px; color: #ccc;">${data.summary}</p>
       ${impostors.length > 0
-        ? `<p class="alert-impostor">🚨 ${impostors.length} IMPOSTORS UNMASKED: ${impostors.map(m => `@${m.name}`).join(', ')}</p>`
-        : `<p class="alert-clear">✅ System Clear: Perfect teamwork signature matched.</p>`
+        ? `<p class="alert-impostor">🚨 ${impostors.length} IMPOSTORS DETECTED: ${impostors.map(m => `@${m.name}`).join(', ')}</p>`
+        : `<p class="alert-clear">✅ System Stable: Everyone contributed cleanly.</p>`
       }
+      <div class="powered-by" style="margin-top: 14px; font-size: 0.85rem; color: #777;">
+        Verified Stack Validation: ${(data.sponsorsUsed || []).map(s => `<span style="background:#141424; padding:4px 8px; margin:0 4px; border-radius:4px; border:1px solid #ff4757; color:#fff; font-weight:bold;">${s}</span>`).join(' ')}
+      </div>
     </div>
     <div class="grid">
   `;
@@ -99,7 +90,7 @@ function renderResults(data) {
         <div class="card-name">@${m.name}</div>
         <span class="badge ${m.verdict}">${m.verdict}</span>
         <div class="score-big" style="color:${scoreColor}">
-          ${m.suspicionScore}<span style="font-size:1rem;color:#ff4757;font-weight:400">/100</span>
+          ${m.suspicionScore}<span style="font-size:1rem;color:#444;font-weight:400">/100</span>
         </div>
         <div class="score-sub">Suspicion Score</div>
 
@@ -109,9 +100,8 @@ function renderResults(data) {
 
         <div class="card-stats">
           Commits: <b>${m.commits}</b> &nbsp;|&nbsp;
-          Lines added: <b>+${m.linesAdded}</b><br>
-          Lines deleted: <b>-${m.linesDeleted || 0}</b> &nbsp;|&nbsp;
-          Last active: <b>${m.lastCommitTime}</b>
+          Lines added: <b>${m.linesAdded}</b><br>
+          Last commit: <b>${m.lastCommitTime}</b>
         </div>
 
         <div class="card-evidence">🔍 ${m.evidence}</div>
@@ -130,14 +120,11 @@ function renderResults(data) {
 }
 
 function downloadReport() {
-  if (!globalData) return;
-  const content = `FREELOADER DETECTIVE EVIDENCE REPORT\n` +
-                  `===================================\n` +
-                  `Project: ${globalData.projectName}\n` +
-                  `Summary: ${globalData.summary}\n`;
-  const blob = new Blob([content], { type: 'text/plain' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'Evidence_Dossier.txt';
-  a.click();
+  if (!globalReportData) return;
+  const outputText = `OFFICIAL VERDICT LOG: ${globalReportData.projectName}\nSummary: ${globalReportData.summary}`;
+  const blob = new Blob([outputText], { type: 'text/plain;charset=utf-8' });
+  const element = document.createElement('a');
+  element.href = URL.createObjectURL(blob);
+  element.download = `Evidence_Dossier.txt`;
+  element.click();
 }
